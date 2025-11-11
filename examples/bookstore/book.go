@@ -4,17 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gopkg.in/guregu/null.v4"
 )
-
-type ISBN null.String
-
-type Chapter struct {
-	// Chapter title
-	Title string `json:"title"`
-	// The amount of words in this chapter
-	NumberOfWords uint `json:"number_of_words"`
-}
 
 type Book struct {
 	BookID uuid.UUID `json:"book_id"` // A line comment about BookID that should be kept.
@@ -26,9 +16,4 @@ type Book struct {
 	Chapters []Chapter `json:"chapters"`
 
 	PublishedAt *time.Time `json:"published_at"`
-}
-
-type TextBook[T int] struct {
-	Book  `tstype:",extends"`
-	Pages T `                 json:"pages"`
 }

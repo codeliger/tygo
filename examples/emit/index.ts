@@ -18,9 +18,9 @@ export type StructAsTuple=[a:number, b:number, c:string]
 export interface CustomMarshalled {
   content: StructAsTuple[];
 }
-export type Genre = "novel" | "crime" | "fantasy"
+export type EmitGenre = "novel" | "crime" | "fantasy"
 
-export interface Book {
+export interface EmitBook {
   title: string;
-  genre: Genre;
+  genre: EmitGenre;
 }

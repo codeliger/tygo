@@ -6,7 +6,7 @@ import bookapp "github.com/codeliger/tygo/examples/bookstore"
 type TokenType string
 
 type StructEmbed struct {
-	Base             `json:",inline" tstype:",extends"` // embed struct with `tstype:"extends"`
+	EmbedBase        `json:",inline" tstype:",extends"` // embed struct with `tstype:"extends"`
 	TokenType        `json:"tokenType"`                 // built-in type field without `tstype:"extends"`
 	Reference        `json:"reference"`                 // embed struct without `tstype:"extends"`
 	OtherReference   Reference                          `json:"other_reference"`

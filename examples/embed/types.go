@@ -1,7 +1,7 @@
 // Package embed types defined in the Go file after the parsed file in the same package
 package embed
 
-type Base struct {
+type EmbedBase struct {
 	ID string `json:"id"`
 }
 

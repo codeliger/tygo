@@ -8,15 +8,15 @@ import "github.com/google/uuid"
 // With preserveComments configured to "types", it won't be preserved.
 
 // Type comments are preserved, unless configured to "none"
-type UserRole = string
+type PreserveTypeCommentsUserRole = string
 
 const (
 	// Const comments are preserved, unless configured to "none"
-	UserRoleDefault UserRole = "viewer"
-	UserRoleEditor  UserRole = "editor" // Line comments are preserved by default. With preserveComments configured to "types", it won't be preserved.
+	PreserveTypeCommentsUserRoleDefault PreserveTypeCommentsUserRole = "viewer"
+	PreserveTypeCommentsUserRoleEditor  PreserveTypeCommentsUserRole = "editor" // Line comments are preserved by default. With preserveComments configured to "types", it won't be preserved.
 )
 
-type User struct {
+type PreserveTypeCommentsUser struct {
 	// Struct field comments are preserved unless configured to "none"
 	ID uuid.NullUUID `json:"id" tstype:"string | null"`
 }

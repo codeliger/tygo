@@ -1,0 +1,3 @@
+packages:
+  - path: "github.com/codeliger/tygo/examples/embed"
+    output_path: "index.ts"

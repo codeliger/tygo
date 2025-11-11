@@ -2,21 +2,33 @@
 import * as bookapp from "../bookstore"
 
 //////////
-// source: inheritance.go
+// source: base.go
 
 export interface Base {
   name: string;
 }
-export interface Base2<T extends string | number /* int */> {
-  id: T;
+
+//////////
+// source: base2.go
+
+export interface Base2 {
+  id: any;
 }
-export interface Base3<T extends string, X extends number /* int */> {
-  class: T;
-  level: X;
+
+//////////
+// source: base3.go
+
+export interface Base3 {
+  class: string;
+  level: number /* int */;
 }
-export interface Other<T extends number /* int */, X extends string> extends Base, Base2<T>, Partial<Base3<X, T>>, bookapp.Book, bookapp.TextBook<T> {
+
+//////////
+// source: other.go
+
+export interface Other extends Base, Base2, Partial<Base3>, bookapp.Book, bookapp.TextBook {
   otherWithBase: Base;
-  otherWithBase2: Base2<X>;
+  otherWithBase2: Base2;
   otherValue: string;
-  author: bookapp.AuthorWithInheritance<T>;
+  author: bookapp.AuthorWithInheritance;
 }

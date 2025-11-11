@@ -27,8 +27,8 @@ type CustomMarshalled struct {
 	Content []StructAsTuple `json:"content"`
 }
 
-//tygo:emit export type Genre = "novel" | "crime" | "fantasy"
-type Book struct {
+//tygo:emit export type EmitGenre = "novel" | "crime" | "fantasy"
+type EmitBook struct {
 	Title string `json:"title"`
-	Genre string `json:"genre" tstype:"Genre"`
+	Genre string `json:"genre" tstype:"EmitGenre"`
 }
