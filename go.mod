@@ -1,8 +1,9 @@
-module github.com/gzuidhof/tygo
+module github.com/codeliger/tygo
 
 go 1.18
 
 require (
+	github.com/gzuidhof/tygo v0.2.19
 	github.com/spf13/cobra v1.3.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -25,3 +26,5 @@ require (
 	golang.org/x/tools v0.1.9
 	gopkg.in/guregu/null.v4 v4.0.0
 )
+
+replace github.com/codeliger/tygo => ./tygo
