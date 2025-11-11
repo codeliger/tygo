@@ -3,9 +3,12 @@ package tygo
 import (
 	"context"
 	"fmt"
+	"go/parser"
+	"go/token"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"golang.org/x/tools/go/packages"
 	"gopkg.in/yaml.v3"
@@ -31,6 +34,44 @@ func New(config *Config) *Tygo {
 		conf:              config,
 		packageGenerators: make(map[string]*PackageGenerator),
 	}
+}
+
+// GenerateFromString converts Go code string to TypeScript.
+//
+// This is useful for testing and programmatic use.
+func GenerateFromString(goCode string, pkgConfig *PackageConfig) (string, error) {
+	var src string
+	if strings.HasPrefix(strings.TrimSpace(goCode), "package ") {
+		src = goCode
+	} else {
+		src = fmt.Sprintf(`package tygoconvert
+
+%s`, goCode)
+	}
+
+	fset := token.NewFileSet()
+
+	f, err := parser.ParseFile(fset, "", src, parser.AllErrors|parser.ParseComments|parser.SkipObjectResolution)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse source: %w", err)
+	}
+
+	err = pkgConfig.Normalize()
+	if err != nil {
+		return "", fmt.Errorf("failed to normalize package config: %w", err)
+	}
+
+	pkgGen := &PackageGenerator{
+		conf: pkgConfig,
+		pkg:  nil,
+	}
+
+	s := new(strings.Builder)
+
+	pkgGen.writeGeneratedFile(s, f, "")
+	code := s.String()
+
+	return code, nil
 }
 
 func (g *Tygo) SetTypeMapping(goType string, tsType string) {
@@ -97,8 +138,8 @@ func ReadConfigFromFilePath(cfgFilePath string) Config {
 		log.Fatalf("error parsing config file: %v", err)
 	}
 
-	for _, p := range config.Packages {
-		err := p.Normalize()
+	for i := range config.Packages {
+		err = config.Packages[i].Normalize()
 		if err != nil {
 			log.Fatalf("error normalizing config: %v", err)
 		}

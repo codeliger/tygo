@@ -1,0 +1,62 @@
+ // Comment for UnionType
+type UnionType interface {
+	// Comment for fields are possible
+	// interface{} // comment after
+
+	// Comment for a method
+	SomeMethod() string
+}
+
+type Derived interface {
+    // interface{} // Line comment
+}
+
+type Any interface {
+    // interface{}
+}
+
+type Empty interface{}
+
+type Something interface{}
+
+type EmptyStruct struct{}
+
+type ValAndPtr struct {
+	Val interface{}
+	// Comment for ptr field
+	Ptr *interface{} // ptr line comment
+}
+
+type ABCD struct {
+	A string `json:"a"`
+	B string `json:"b"`
+	C UnionType `json:"c"`
+	D interface{} `json:"d"`
+}
+
+type Foo struct {
+	Bar interface{}
+	Boo *interface{}
+}
+
+type WithFooGenericTypeArg struct {
+	SomeField Foo `json:"some_field"`
+}
+
+// Should not be output as it's a function
+func (f Foo) DoSomething() {
+	panic("something")
+}
+
+type Single struct {
+	Field interface{}
+}
+
+type SingleSpecific = Single
+
+type AnyStructField struct {
+	Value     interface{}
+	SomeField string
+}
+
+type JsonArray []interface{}

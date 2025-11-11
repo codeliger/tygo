@@ -3,6 +3,7 @@ package tygo
 import (
 	"go/ast"
 	"go/token"
+	"os"
 	"strings"
 )
 
@@ -50,12 +51,22 @@ func (g *PackageGenerator) Generate() (string, error) {
 
 	filepaths := g.GoFiles
 
-	for i, file := range g.pkg.Syntax {
-		if g.conf.IsFileIgnored(filepaths[i]) {
+	for _, filepath := range filepaths {
+		if g.conf.IsFileIgnored(filepath) {
 			continue
 		}
 
-		g.writeGeneratedFile(s, file, filepaths[i])
+		content, err := os.ReadFile(filepath)
+		if err != nil {
+			return "", err
+		}
+
+		ts, err := GenerateFromString(string(content), g.conf)
+		if err != nil {
+			return "", err
+		}
+
+		s.WriteString(ts)
 	}
 
 	return s.String(), nil

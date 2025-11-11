@@ -1,0 +1,50 @@
+type MyUint8 uint8
+type MyInt int
+type MyString string
+type MyAny any
+
+// Should be a number in TypeScript.
+type MyRune rune
+
+// Comment for a struct
+type MyStruct struct {
+	SomeField any `json:"some_field"`
+	// Comment for a field
+	OtherField            bool // Comment after line
+	FieldWithImportedType some.Type
+}
+
+// Foo
+type MyValue int // Bar
+
+// A comment on an unexported constant
+const myValue = 3
+
+// A comment on an unexported type
+type myType struct {
+	// A comment on an unexported field
+	field string
+}
+
+// Mixed unexported and exported
+const (
+	unexportedValue = 7  // A comment on an unexported constant
+	ExportedValue   = 42 // A comment on an exported constant
+)
+
+// Unexported group
+const (
+	unexportedValue1 = 1 // A comment on an unexported constant
+	unexportedValue2 = 2 // Another comment on an unexported constant
+)
+
+type A struct {
+	Foo, Bar, baz string // A comment on fields separated by a comma
+}
+
+type B struct {
+	// A comment above the fields separated by a comma
+	Foo, Bar, baz string
+}
+
+const Pi, E = 3.14, 2.71 // A comment on constants separated by a comma

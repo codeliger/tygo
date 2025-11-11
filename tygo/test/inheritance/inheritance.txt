@@ -1,0 +1,24 @@
+type Base struct {
+	Name string `json:"name"`
+}
+
+type Base2 struct {
+	ID interface{} `json:"id"`
+}
+
+type Base3 struct {
+	Class string `json:"class"`
+	Level int    `json:"level"`
+}
+
+type Other struct {
+	*Base          `tstype:",extends,required"`
+	Base2          `tstype:",extends"`
+	*Base3         `tstype:",extends"`
+	OtherWithBase  Base                             `                                          json:"otherWithBase"`
+	OtherWithBase2 Base2                            `                                          json:"otherWithBase2"`
+	OtherValue     string                           `                                          json:"otherValue"`
+	Author         bookapp.AuthorWithInheritance `tstype:"bookapp.AuthorWithInheritance" json:"author"`
+	bookapp.Book   `tstype:",extends"`
+	TextBook       *bookapp.TextBook `tstype:",extends,required"`
+}
