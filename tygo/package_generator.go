@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// generateFile writes the generated code for a single file to the given strings.Builder.
-func (g *PackageGenerator) generateFile(s *strings.Builder, file *ast.File, filepath string) {
+// writeGeneratedFile writes the generated code for a single file to the given strings.Builder.
+func (g *PackageGenerator) writeGeneratedFile(s *strings.Builder, file *ast.File, outFilePath string) {
 	first := true
 
 	ast.Inspect(file, func(n ast.Node) bool {
@@ -26,8 +26,8 @@ func (g *PackageGenerator) generateFile(s *strings.Builder, file *ast.File, file
 			}
 
 			if first {
-				if filepath != "" {
-					g.writeFileSourceHeader(s, filepath, file)
+				if outFilePath != "" {
+					g.writeFileSourceHeader(s, outFilePath, file)
 				}
 				first = false
 			}
@@ -55,7 +55,7 @@ func (g *PackageGenerator) Generate() (string, error) {
 			continue
 		}
 
-		g.generateFile(s, file, filepaths[i])
+		g.writeGeneratedFile(s, file, filepaths[i])
 	}
 
 	return s.String(), nil

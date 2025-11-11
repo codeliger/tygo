@@ -32,7 +32,7 @@ func ConvertGoToTypescript(goCode string, pkgConfig PackageConfig) (string, erro
 
 	s := new(strings.Builder)
 
-	pkgGen.generateFile(s, f, "")
+	pkgGen.writeGeneratedFile(s, f, "")
 	code := s.String()
 
 	return code, nil

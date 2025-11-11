@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/codeliger/tygo/tygo"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 func ReadFromFilepath(cfgFilepath string) tygo.Config {
