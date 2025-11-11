@@ -1,11 +1,14 @@
 package tygo
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
 	"golang.org/x/tools/go/packages"
+	"gopkg.in/yaml.v3"
 )
 
 // Generator for one or more input packages, responsible for linking
@@ -37,8 +40,10 @@ func (g *Tygo) SetTypeMapping(goType string, tsType string) {
 }
 
 func (g *Tygo) Generate() error {
+	ctx := context.Background()
 	pkgs, err := packages.Load(&packages.Config{
-		Mode: packages.NeedSyntax | packages.NeedFiles,
+		Context: ctx,
+		Mode:    packages.NeedSyntax | packages.NeedFiles,
 	}, g.conf.PackageNames()...)
 	if err != nil {
 		return err
@@ -69,13 +74,35 @@ func (g *Tygo) Generate() error {
 		outPath := pkgGen.conf.ResolvedOutputPath(filepath.Dir(pkg.GoFiles[0]))
 		err = os.MkdirAll(filepath.Dir(outPath), os.ModePerm)
 		if err != nil {
-			return nil
+			return err
 		}
 
 		err = os.WriteFile(outPath, []byte(code), 0o664)
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 	return nil
+}
+
+func ReadConfigFromFilePath(cfgFilePath string) Config {
+	data, err := os.ReadFile(cfgFilePath)
+	if err != nil {
+		log.Fatalf("error reading config file: %v", err)
+	}
+
+	var config Config
+	err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		log.Fatalf("error parsing config file: %v", err)
+	}
+
+	for _, p := range config.Packages {
+		err := p.Normalize()
+		if err != nil {
+			log.Fatalf("error normalizing config: %v", err)
+		}
+	}
+
+	return config
 }

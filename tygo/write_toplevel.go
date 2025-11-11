@@ -234,6 +234,19 @@ func (g *PackageGenerator) writeValueSpec(
 			group.groupType = ""
 		}
 
+		if hasExplicitValue {
+			val := vs.Values[i]
+			if call, ok := val.(*ast.CallExpr); ok {
+				if fun, ok := call.Fun.(*ast.Ident); ok && len(call.Args) == 1 {
+					if lit, ok := call.Args[0].(*ast.BasicLit); ok && lit.Kind == token.STRING {
+						group.groupType = fun.Name
+						group.groupValue = lit.Value
+						hasExplicitValue = false
+					}
+				}
+			}
+		}
+
 		s.WriteString("export const ")
 		s.WriteString(name.Name)
 		if vs.Type != nil {
@@ -245,7 +258,7 @@ func (g *PackageGenerator) writeValueSpec(
 
 			s.WriteString(typeString)
 			group.groupType = typeString
-		} else if group.groupType != "" && !hasExplicitValue {
+		} else if group.groupType != "" {
 			s.WriteString(": ")
 			s.WriteString(group.groupType)
 		}
@@ -255,7 +268,6 @@ func (g *PackageGenerator) writeValueSpec(
 		if hasExplicitValue {
 			val := vs.Values[i]
 			tempSB := &strings.Builder{}
-			// log.Println("const:", name.Name, reflect.TypeOf(val), val)
 			g.writeType(tempSB, val, nil, 0, false)
 			group.groupValue = tempSB.String()
 		}

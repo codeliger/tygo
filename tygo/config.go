@@ -81,15 +81,14 @@ func (c Config) PackageConfig(packagePath string) *PackageConfig {
 	for _, pc := range c.Packages {
 		if pc.Path == packagePath {
 			pc.TypeMappings = c.mergeMappings(pc.TypeMappings)
-			pcNormalized, err := pc.Normalize()
+			err := pc.Normalize()
 			if err != nil {
-				log.Fatalf("Error in config for package %s: %s", packagePath, err)
+				log.Fatalf("error in config for package %s: %s", packagePath, err)
 			}
-
-			return &pcNormalized
+			return pc
 		}
 	}
-	log.Fatalf("Config not found for package %s", packagePath)
+	log.Fatalf("config not found for package %s", packagePath)
 	return nil
 }
 
@@ -158,8 +157,8 @@ func (c PackageConfig) ResolvedOutputPath(packageDir string) string {
 	return c.OutputPath
 }
 
-// Normalize returns a new PackageConfig with default values set.
-func (pc PackageConfig) Normalize() (PackageConfig, error) {
+// Normalize sets default values on the PackageConfig.
+func (pc *PackageConfig) Normalize() error {
 	if pc.Indent == "" {
 		pc.Indent = "  "
 	}
@@ -175,20 +174,20 @@ func (pc PackageConfig) Normalize() (PackageConfig, error) {
 	var err error
 	pc.Flavor, err = normalizeFlavor(pc.Flavor)
 	if err != nil {
-		return pc, fmt.Errorf("invalid flavor config for package %s: %s", pc.Path, err)
+		return fmt.Errorf("invalid flavor config for package %s: %s", pc.Path, err)
 	}
 
 	pc.PreserveComments, err = normalizePreserveComments(pc.PreserveComments)
 	if err != nil {
-		return pc, fmt.Errorf("invalid preserve_comments config for package %s: %s", pc.Path, err)
+		return fmt.Errorf("invalid preserve_comments config for package %s: %s", pc.Path, err)
 	}
 
 	pc.OptionalType, err = normalizeOptionalType(pc.OptionalType)
 	if err != nil {
-		return pc, fmt.Errorf("invalid optional_type config for package %s: %s", pc.Path, err)
+		return fmt.Errorf("invalid optional_type config for package %s: %s", pc.Path, err)
 	}
 
-	return pc, nil
+	return nil
 }
 
 func (c Config) mergeMappings(pkg map[string]string) map[string]string {

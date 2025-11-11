@@ -1,7 +1,21 @@
 package main
 
-import "github.com/gzuidhof/tygo/cmd"
+import (
+	"flag"
+	"log"
+
+	"github.com/codeliger/tygo/tygo"
+)
 
 func main() {
-	cmd.Execute()
+	config := flag.String("config", "tygo.yaml", "config file to load")
+	flag.Parse()
+
+	tygoConfig := tygo.ReadConfigFromFilePath(*config)
+	t := tygo.New(&tygoConfig)
+
+	err := t.Generate()
+	if err != nil {
+		log.Fatalf("tygo failed: %v", err)
+	}
 }

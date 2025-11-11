@@ -45,14 +45,15 @@ func parseMarkdownFixtures(fileContents []byte) ([]MarkdownFixture, error) {
 		if strings.HasPrefix(line, "```") {
 			if inCodeBlock {
 				// End of code block
-				if currentBlockLanguage == "ts" || currentBlockLanguage == "typescript" {
+				switch currentBlockLanguage {
+				case "ts", "typescript":
 					// Every fixture ends with a typescript block
 					currentFixture.TsCode = currentBlockContents
 					fixtures = append(fixtures, currentFixture)
 					currentFixture = MarkdownFixture{}
-				} else if currentBlockLanguage == "go" {
+				case "go":
 					currentFixture.GoCode = currentBlockContents
-				} else if currentBlockLanguage == "yml" || currentBlockLanguage == "yaml" {
+				case "yml", "yaml":
 					// Parse package config
 					pc := PackageConfig{}
 					err := yaml.Unmarshal([]byte(currentBlockContents), &pc)
@@ -89,7 +90,6 @@ func TestMarkdownFixtures(t *testing.T) {
 
 	for _, fixture := range fixtures {
 		fixture := fixture
-
 		// Read markdown file
 		md, err := mdfs.ReadFile("testdata/fixtures/" + fixture.Name())
 		require.NoError(t, err)
